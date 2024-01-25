@@ -2,6 +2,7 @@ package com.flight.service;
 
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,8 @@ import com.flight.entities.Reservation;
 import com.flight.repositories.FlightRepository;
 import com.flight.repositories.PassengerRepository;
 import com.flight.repositories.ReservationRepository;
+import com.flight.utilities.EmailUtil;
+import com.flight.utilities.PDFgenerator;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -24,6 +27,12 @@ public class ReservationServiceImpl implements ReservationService {
 	
 	@Autowired
 	private ReservationRepository reservationRepo;
+	
+	@Autowired
+	private PDFgenerator pdfGenerator;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@Override
 	public Reservation bookFlight(ReservationRequest request) {
@@ -39,6 +48,7 @@ public class ReservationServiceImpl implements ReservationService {
 		long flightId = request.getFlightId();
 		Optional<Flight> findById = flightRepo.findById(flightId);
 		Flight flight = findById.get();
+		
 		Reservation reservation = new Reservation();
 		reservation.setFlight(flight);
 		reservation.setPassenger(passenger);
@@ -46,11 +56,10 @@ public class ReservationServiceImpl implements ReservationService {
 		reservation.setNumberOfBags(0);
 		
 		String filePath = "D:\\FlightReservationPDF" + 
-		reservation.getId()
-		+ ".pdf";
+		reservation.getId() + ".pdf";
 		reservationRepo.save(reservation);
-//		pdfGenerator.generateItinerary(reservation, filePath);
-//		emailUtil.sendItinerary(passenger.getEmail(), filePath);
+		pdfGenerator.generateItinerary(reservation, filePath);
+		emailUtil.sendItinerary(passenger.getEmail(), filePath);
 		return reservation;
 
 
