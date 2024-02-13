@@ -7,11 +7,12 @@
 <title>Home Page</title>
 </head>
 <body>
-
+<div align="center">
 <h1>Home Page</h1>
 
-<a href="showLoginPage">Click Here To Login</a> <br>
-<a href="showReg">Click Here To Create New Account</a>
-
+<a href="showLoginPage"><input type="submit" value="Login"></a><br>
+<br>
+<a href="showReg"><input type="submit" value="Create Account"></a>
+</div>
 </body>
 </html>
